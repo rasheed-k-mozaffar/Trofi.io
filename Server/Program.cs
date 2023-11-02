@@ -1,9 +1,16 @@
 using Microsoft.AspNetCore.ResponseCompression;
+using Trofi.io.Server.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+#region SERVICES
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+builder.Services.AddCustomServicesToDiContainer();
+
+builder.Services.RegisterDbContextAndIdentity(builder.Configuration);
+#endregion
 
 var app = builder.Build();
 
