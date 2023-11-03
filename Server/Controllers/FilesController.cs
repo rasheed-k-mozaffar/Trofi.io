@@ -81,11 +81,11 @@ public class FilesController : ControllerBase
     /// <param name="imageId">The id of the image to get</param>
     /// <returns></returns>
     [HttpGet("image/{id}")]
-    public async Task<IActionResult> GetDishImageById(Guid imageId)
+    public async Task<IActionResult> GetDishImageById(Guid id)
     {
         try
         {
-            var dishImage = await _filesRepository.GetDishImageAsync(imageId);
+            var dishImage = await _filesRepository.GetDishImageAsync(id);
 
             var imageAsDto = dishImage.ToDishImageDto();
 
@@ -111,11 +111,11 @@ public class FilesController : ControllerBase
     /// <param name="imageId">the id of the image to delete</param>
     /// <returns></returns>
     [HttpDelete("delete-image/{id}")]
-    public async Task<IActionResult> DeleteImage(Guid imageId)
+    public async Task<IActionResult> DeleteImage(Guid id)
     {
         try
         {
-            await _filesRepository.DeleteDishImageAsync(imageId);
+            await _filesRepository.DeleteDishImageAsync(id);
 
             return Ok(new ApiResponse
             {

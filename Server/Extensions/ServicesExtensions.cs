@@ -32,5 +32,6 @@ public static class ServicesExtensions
     public static void AddCustomServicesToDiContainer(this IServiceCollection services)
     {
         // ex: services.AddScoped<ICustomService, CustomService>();
+        services.AddScoped<IFilesRepository, FilesRepository>();
     }
 }
