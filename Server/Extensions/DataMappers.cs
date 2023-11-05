@@ -18,9 +18,39 @@ public static class DataMappers
         };
     }
     #endregion
+
+    #region Menu Item Mappers
+    public static MenuItemDto ToMenuItemDto(this MenuItem menuItem)
+    {
+        return new MenuItemDto
+        {
+            Id = menuItem.Id,
+            Name = menuItem.Name,
+            Price = menuItem.Price,
+            UpdatedPrice = menuItem.UpdatedPrice,
+            IsAvailable = menuItem.IsAvailable,
+            IsSpecial = menuItem.IsSpecial,
+            Images = menuItem.DishImages?.Select(i => i.ToDishImageDto())
+        };
+    }
+    #endregion
 }
 
 public static class ModelMappers
 {
-
+    #region 
+    public static MenuItem ToMenuItemCreate(this DishCreateDto dish)
+    {
+        return new MenuItem
+        {
+            Id = dish.Id,
+            Name = dish.Name,
+            Description = dish.Description,
+            Price = dish.Price,
+            UpdatedPrice = null,
+            IsAvailable = dish.IsAvailable,
+            IsSpecial = dish.IsSpecial
+        };
+    }
+    #endregion
 }
