@@ -35,6 +35,5 @@ public static class ServicesExtensions
         services.AddScoped<IFilesRepository, FilesRepository>();
         services.AddScoped<IMenuRepository, MenuRepository>();
         services.AddScoped<IauthRepository, authRepository>();
-        services.AddScoped<IMenuRepository, MenuRepository>();
     }
 }
