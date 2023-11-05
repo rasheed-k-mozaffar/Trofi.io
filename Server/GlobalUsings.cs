@@ -6,4 +6,9 @@ global using Trofi.io.Server.Exceptions;
 global using Trofi.io.Server.Repositories;
 global using Trofi.io.Server.Extensions;
 global using Trofi.io.Shared.ApiResponses;
-
+global using Trofi.io.Shared.DTOs;
+global using Microsoft.Identity;
+global using Trofi.io.Shared.Auth;
+global using System.IdentityModel.Tokens.Jwt;
+global using Microsoft.IdentityModel.Tokens;
+global using System.Security.Claims;

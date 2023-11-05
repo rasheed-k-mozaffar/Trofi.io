@@ -33,6 +33,7 @@ public static class ServicesExtensions
     {
         // ex: services.AddScoped<ICustomService, CustomService>();
         services.AddScoped<IFilesRepository, FilesRepository>();
+        services.AddScoped<IauthRepository, authRepository>();
         services.AddScoped<IMenuRepository, MenuRepository>();
     }
 }
