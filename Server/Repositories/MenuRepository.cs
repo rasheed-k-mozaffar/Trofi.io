@@ -81,9 +81,9 @@ public class MenuRepository : IMenuRepository
             // before completing the delete, we have to delete the associated images
             if (item.DishImages is not null && item.DishImages.Any())
             {
-                foreach (var img in item.DishImages)
+                for (int i = 0; i < item.DishImages.Count; i++)
                 {
-                    await _filesRepository.DeleteDishImageAsync(id);
+                    await _filesRepository.DeleteDishImageAsync(item.DishImages.ElementAt(i).Id);
                 }
             }
 
