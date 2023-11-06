@@ -5,7 +5,7 @@ using Trofi.io.Shared.Auth;
 
 namespace Trofi.io.Server.Repositories
 {
-    public interface IauthRepository
+    public interface IAuthRepository
     {
         Task<UserManagerResponse> RegisterUserAsync(RegisterRequest request);
         Task<UserManagerResponse> LoginUserAsync(LoginRequest request);
