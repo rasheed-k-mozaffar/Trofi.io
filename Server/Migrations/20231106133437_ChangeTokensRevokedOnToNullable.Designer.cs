@@ -12,8 +12,8 @@ using Trofi.io.Server.Data;
 namespace Trofi.io.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231105073807_me")]
-    partial class me
+    [Migration("20231106133437_ChangeTokensRevokedOnToNullable")]
+    partial class ChangeTokensRevokedOnToNullable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -364,6 +364,42 @@ namespace Trofi.io.Server.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Trofi.io.Server.Models.AppUser", b =>
+                {
+                    b.OwnsMany("Trofi.io.Server.Models.RefreshToken", "RefreshTokens", b1 =>
+                        {
+                            b1.Property<string>("AppUserId")
+                                .HasColumnType("nvarchar(450)");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
+
+                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+
+                            b1.Property<DateTime>("CreatedOn")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<DateTime>("ExpiresOn")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<DateTime?>("RevokedOn")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<string>("Token")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("AppUserId", "Id");
+
+                            b1.ToTable("RefreshToken");
+
+                            b1.WithOwner()
+                                .HasForeignKey("AppUserId");
+                        });
+
+                    b.Navigation("RefreshTokens");
                 });
 
             modelBuilder.Entity("Trofi.io.Server.Models.Cart", b =>

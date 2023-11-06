@@ -5,92 +5,131 @@ using RandomDataGenerator.FieldOptions;
 using RandomDataGenerator.Randomizers;
 using Trofi.io.Server.Repositories;
 using Trofi.io.Shared.Auth;
-using Trofi.io.Shared.DTOs;
 
 namespace Trofi.io.Server.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
-    public class authController : ControllerBase
+    [Route("api/[controller]")]
+    public class AuthController : ControllerBase
     {
-        private readonly IauthRepository _IauthRepository;
-        public authController( IauthRepository IauthRepository)
+        private readonly IAuthRepository _authRepository;
+        private readonly ILogger<AuthController> _logger;
+        public AuthController(IAuthRepository authRepository, ILogger<AuthController> logger)
         {
-            _IauthRepository = IauthRepository;
+            _authRepository = authRepository;
+            _logger = logger;
         }
+
+
         [HttpPost("login")]
-        public async Task<ActionResult<UserManagerResponse>> Login( LoginRequest request)
+        public async Task<ActionResult<UserManagerResponse>> Login(LoginRequest request)
         {
-            if(request is null)
+            if (ModelState.IsValid)
             {
-                return BadRequest("Login information empty");
-            }
-            else
-            {
-                var response = await _IauthRepository.LoginUserAsync(request);
-                if (response.IsSuccess == true)
+                var result = await _authRepository.LoginUserAsync(request);
+
+                if (result.IsSuccess)
                 {
-                    RefreshToken refresh = authRepository.GenerateRefreshToken();
-                    SetRefreshToken(refresh);
-                    return Ok(response);
+                    // set the refresh token in the resopnse cookies
+                    if (!string.IsNullOrEmpty(result.RefreshToken))
+                    {
+                        SetRefreshToken(result.RefreshToken, result.RefreshTokenExpiration);
+                    }
+
+                    return Ok(new ApiResponse<string>
+                    {
+                        Message = result.Message,
+                        Body = result.JWT,
+                        IsSuccess = true
+                    });
                 }
                 else
                 {
-                    return BadRequest(response);
+                    return BadRequest(new ApiErrorResponse
+                    {
+                        ErrorMessage = result.Message
+                    });
                 }
             }
+            else
+            {
+                return BadRequest(ModelState);
+            }
         }
+
         [HttpPost("register")]
-        public async Task<ActionResult> Register( RegisterRequest request)
+        public async Task<ActionResult> Register(RegisterRequest request)
         {
-
-            if (string.IsNullOrEmpty(request.username))
+            if (ModelState.IsValid)
             {
-            Console.WriteLine(request.username);
-                return BadRequest("Login information empty");
+                var result = await _authRepository.RegisterUserAsync(request);
+
+                if (result.IsSuccess)
+                {
+                    return Ok(new ApiResponse
+                    {
+                        Message = result.Message,
+                        IsSuccess = true
+                    });
+                }
+                else
+                {
+                    return BadRequest(new ApiErrorResponse
+                    {
+                        ErrorMessage = result.Message
+                    });
+                }
             }
             else
             {
-                var response = await _IauthRepository.RegisterUserAsync(request);
-                if (response.IsSuccess)
-                {
-                    return Ok(response);
-                }                
-                else
-                {
-                    return BadRequest(response);
-                }
-            }
-        }        
-        [HttpPost("changepassword")]
-        public async Task<ActionResult> changepassword( ChangePasswordRequest request)
-        {
-
-            if (request is null)
-            {
-                return BadRequest("Login information empty");
-            }
-            else
-            {
-                var response = await _IauthRepository.UpdatePasswordAsync(request);
-                if (response.IsSuccess)
-                {
-                    return Ok(response);
-                }                
-                else
-                {
-                    return BadRequest(response);
-                }
+                return BadRequest(ModelState);
             }
         }
-        private void SetRefreshToken(RefreshToken refreshToken)
+
+        [HttpPost("change-password")]
+        public async Task<ActionResult> changepassword(ChangePasswordRequest request)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _authRepository.UpdatePasswordAsync(request);
+
+                if (result.IsSuccess)
+                {
+                    return Ok(new ApiResponse
+                    {
+                        Message = result.Message,
+                        IsSuccess = true
+                    });
+                }
+                else
+                {
+                    return BadRequest(new ApiErrorResponse
+                    {
+                        ErrorMessage = result.Message
+                    });
+                }
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+
+
+        /// <summary>
+        /// Sets the refresh token in the response cookies and sets the expiration time for the cookie
+        /// which is the same as the refresh token's expiration date
+        /// </summary>
+        /// <param name="refreshToken"></param>
+        /// <param name="expiresOn"></param>
+        private void SetRefreshToken(string refreshToken, DateTime expiresOn)
         {
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
-                Expires = DateTime.Now.AddDays(1),
+                Expires = expiresOn.ToLocalTime()
             };
-            Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
+            Response.Cookies.Append("Refresh_Token", refreshToken, cookieOptions);
         }
     }
 }

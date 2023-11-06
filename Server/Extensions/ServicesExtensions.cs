@@ -1,4 +1,8 @@
-﻿namespace Trofi.io.Server.Extensions;
+﻿using System.Text;
+using Castle.Components.DictionaryAdapter;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+
+namespace Trofi.io.Server.Extensions;
 
 public static class ServicesExtensions
 {
@@ -31,9 +35,38 @@ public static class ServicesExtensions
     /// <param name="services"></param>
     public static void AddCustomServicesToDiContainer(this IServiceCollection services)
     {
-        // ex: services.AddScoped<ICustomService, CustomService>();
         services.AddScoped<IFilesRepository, FilesRepository>();
         services.AddScoped<IMenuRepository, MenuRepository>();
-        services.AddScoped<IauthRepository, authRepository>();
+        services.AddScoped<IAuthRepository, AuthRepository>();
+    }
+
+    /// <summary>
+    /// Adds Bearer authentcation, configures the default authentication used in the application and
+    /// configures the token validation parameters used for validating the incoming JWTs
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="configuration"></param>
+    public static void AddBearerAndConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(o =>
+        {
+            var secret = Encoding.UTF8.GetBytes(configuration["JwtSettings:Secret"]!);
+            o.TokenValidationParameters = new TokenValidationParameters()
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidIssuer = configuration["JwtSettings:Issuer"],
+                ValidAudience = configuration["JwtSettings:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(secret),
+                RequireExpirationTime = true,
+                ClockSkew = TimeSpan.Zero
+            };
+        });
     }
 }

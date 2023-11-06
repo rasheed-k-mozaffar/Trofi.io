@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Trofi.io.Shared.Auth
+namespace Trofi.io.Shared.Auth;
+
+public class LoginRequest
 {
-    public class LoginRequest
-    {
-        public string email { get; set; } = string.Empty;
-        public string password { get; set; } = string.Empty;
-    }
+    [Required(ErrorMessage = "Your email is required")]
+    [EmailAddress(ErrorMessage = "The email you entered is an invalid email")]
+    public string? Email { get; set; }
+
+    [Required(ErrorMessage = "Your password is required")]
+    public string? Password { get; set; }
 }
+

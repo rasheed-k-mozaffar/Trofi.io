@@ -43,8 +43,7 @@ public class AppDbContext : IdentityDbContext<AppUser>
         // one - to - many: A signle cart can contain multiple items
         builder.Entity<Cart>()
             .HasMany(p => p.Items)
-            .WithOne()
-            .HasForeignKey(p => p.CartId);
+            .WithOne();
 
         // one - to - many: A dish can have multiple images
         builder.Entity<MenuItem>()
