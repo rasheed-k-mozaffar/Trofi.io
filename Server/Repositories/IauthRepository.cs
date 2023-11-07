@@ -10,6 +10,7 @@ namespace Trofi.io.Server.Repositories
         Task<UserManagerResponse> RegisterUserAsync(RegisterRequest request);
         Task<UserManagerResponse> LoginUserAsync(LoginRequest request);
         Task<UserManagerResponse> UpdatePasswordAsync(ChangePasswordRequest request);
-
+        Task<UserManagerResponse> RefreshTokenAsync(string token);
+        Task<bool> RevokeTokenAsync(string token);
     }
 }
