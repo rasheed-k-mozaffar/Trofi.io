@@ -207,6 +207,74 @@ public class AuthRepository : IAuthRepository
         }
     }
 
+
+
+    public async Task<UserManagerResponse> RefreshTokenAsync(string token)
+    {
+        // check the validity of the received refresh token
+        var user = await _userManager.Users
+        .SingleOrDefaultAsync(u => u.RefreshTokens!.Any(rt => rt.Token == token));
+
+        if (user is null)
+        {
+            return new UserManagerResponse
+            {
+                Message = "Invalid token",
+                IsSuccess = false
+            };
+        }
+
+        var refreshToken = user.RefreshTokens!.Single(t => t.Token == token);
+
+        if (!refreshToken.IsActive)
+        {
+            return new UserManagerResponse
+            {
+                Message = "Inactive token",
+                IsSuccess = false
+            };
+        }
+
+        refreshToken.RevokedOn = DateTime.UtcNow;
+
+        var newRefreshToken = GenerateRefreshToken();
+        user.RefreshTokens!.Add(newRefreshToken);
+
+        await _userManager.UpdateAsync(user);
+        var jwtToken = CreateJwtToken(user);
+
+        return new UserManagerResponse
+        {
+            Message = "Refreshed successfully",
+            JWT = jwtToken,
+            IsSuccess = true,
+            RefreshToken = newRefreshToken.Token,
+            RefreshTokenExpiration = newRefreshToken.ExpiresOn
+        };
+    }
+
+    public async Task<bool> RevokeTokenAsync(string token)
+    {
+        // check the validity of the received refresh token
+        var user = await _userManager.Users
+        .SingleOrDefaultAsync(u => u.RefreshTokens!.Any(rt => rt.Token == token));
+
+        if (user is null)
+            return false;
+
+
+        var refreshToken = user.RefreshTokens!.Single(t => t.Token == token);
+
+        if (!refreshToken.IsActive)
+            return false;
+
+
+        refreshToken.RevokedOn = DateTime.UtcNow;
+
+        await _userManager.UpdateAsync(user);
+        return true;
+    }
+
     /// <summary>
     /// Generates a JWT for the user with the claims
     /// </summary>

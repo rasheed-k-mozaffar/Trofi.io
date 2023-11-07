@@ -86,8 +86,72 @@ namespace Trofi.io.Server.Controllers
             }
         }
 
+        [HttpGet("refresh-token")]
+        public async Task<IActionResult> RefreshToken()
+        {
+            var refreshToken = Request.Cookies["Refresh_Token"];
+
+            var result = await _authRepository.RefreshTokenAsync(refreshToken);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(new ApiErrorResponse
+                {
+                    ErrorMessage = result.Message
+                });
+            }
+
+            SetRefreshToken(result.RefreshToken, result.RefreshTokenExpiration);
+
+            return Ok(new ApiResponse<string>
+            {
+                Message = result.Message,
+
+            });
+        }
+
+        [HttpPost("revoke-token")]
+        public async Task<IActionResult> RevokeToken(RevokeTokenRequest revokeTokenRequest)
+        {
+            // getting the token from either place works
+            var refreshToken = revokeTokenRequest.Token ?? Request.Cookies["Refresh_Token"];
+
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                return BadRequest(new ApiErrorResponse
+                {
+                    ErrorMessage = "Token is required"
+                });
+            }
+
+            var result = await _authRepository.RevokeTokenAsync(refreshToken);
+
+            if (!result)
+            {
+                return BadRequest(new ApiErrorResponse
+                {
+                    ErrorMessage = "The token is invalid"
+                });
+            }
+
+            // remove token from cookies
+            RemoveTokenFromCookies();
+
+            return Ok(new ApiResponse
+            {
+                Message = "Session revoked successfully",
+                IsSuccess = true
+            });
+        }
+
+
+        /// <summary>
+        /// Allows the user to request a change to their current password into sometihng else
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost("change-password")]
-        public async Task<ActionResult> changepassword(ChangePasswordRequest request)
+        public async Task<ActionResult> ChangePassword(ChangePasswordRequest request)
         {
             if (ModelState.IsValid)
             {
@@ -130,6 +194,14 @@ namespace Trofi.io.Server.Controllers
                 Expires = expiresOn.ToLocalTime()
             };
             Response.Cookies.Append("Refresh_Token", refreshToken, cookieOptions);
+        }
+
+        /// <summary>
+        /// Removes the Refresh token from the cookies after the token in the cookies is revoked.
+        /// </summary>
+        private void RemoveTokenFromCookies()
+        {
+            Response.Cookies.Delete("Refresh_Token");
         }
     }
 }

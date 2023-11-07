@@ -7,8 +7,8 @@ public class RefreshToken
     public DateTime ExpiresOn { get; set; }
     public DateTime CreatedOn { get; set; }
     public DateTime? RevokedOn { get; set; }
-    public bool? IsExpired => DateTime.UtcNow >= ExpiresOn;
-    public bool? IsActive => DateTime.UtcNow >= CreatedOn;
+    public bool IsExpired => DateTime.UtcNow >= ExpiresOn;
+    public bool IsActive => DateTime.UtcNow >= CreatedOn;
 
 }
 
