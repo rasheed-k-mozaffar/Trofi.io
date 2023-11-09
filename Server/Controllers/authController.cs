@@ -1,10 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using RandomDataGenerator.FieldOptions;
-using RandomDataGenerator.Randomizers;
-using Trofi.io.Server.Repositories;
-using Trofi.io.Shared.Auth;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Trofi.io.Server.Controllers
 {
@@ -91,6 +85,14 @@ namespace Trofi.io.Server.Controllers
         {
             var refreshToken = Request.Cookies["Refresh_Token"];
 
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                return BadRequest(new ApiErrorResponse
+                {
+                    ErrorMessage = "The refresh token is required"
+                });
+            }
+
             var result = await _authRepository.RefreshTokenAsync(refreshToken);
 
             if (!result.IsSuccess)
@@ -101,7 +103,7 @@ namespace Trofi.io.Server.Controllers
                 });
             }
 
-            SetRefreshToken(result.RefreshToken, result.RefreshTokenExpiration);
+            SetRefreshToken(result.RefreshToken!, result.RefreshTokenExpiration);
 
             return Ok(new ApiResponse<string>
             {
