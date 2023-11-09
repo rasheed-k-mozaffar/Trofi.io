@@ -8,6 +8,7 @@ public class AppDbContext : IdentityDbContext<AppUser>
     public DbSet<Cart> Carts { get; set; }
     public DbSet<MenuItem> MenuItems { get; set; }
     public DbSet<DishImage> Images { get; set; }
+    public DbSet<CartItem> CartItems { get; set; }
     #endregion
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)

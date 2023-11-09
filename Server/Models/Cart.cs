@@ -12,5 +12,6 @@ public class Cart
     public string? AppUserId { get; set; }
     public virtual AppUser? CartOwner { get; set; }
 
-    public virtual ICollection<MenuItem>? Items { get; set; } = new List<MenuItem>();
+    public virtual ICollection<CartItem>? Items { get; set; } = new List<CartItem>();
+    public double Total => Items is not null ? Items.Sum(i => i.Price * i.Quantity) : 0;
 }
