@@ -34,6 +34,22 @@ public static class DataMappers
         };
     }
     #endregion
+
+    #region Cart Item Mappers
+    public static CartItemDto ToCartItemDto(this CartItem cartItem)
+    {
+        return new CartItemDto
+        {
+            Id = cartItem.Id,
+            ProductId = cartItem.ProductId,
+            ProductName = cartItem.ProductName,
+            Quantity = cartItem.Quantity,
+            Price = cartItem.Price,
+            UpdatedPrice = cartItem.UpdatedPrice,
+            CoverImageURL = cartItem.CoverImageURL
+        };
+    }
+    #endregion
 }
 
 public static class ModelMappers
