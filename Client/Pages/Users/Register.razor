@@ -1,0 +1,80 @@
+﻿@page "/user/register"
+
+<PageTitle>Register New User</PageTitle>
+
+@if (isMakingRequest)
+{
+    <BasicLoader />
+}
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1>Register your account</h1>
+        </div>
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <ErrorAlert ErrorMessage="@errorMessage" />
+        }
+
+        <EditForm Model="request" OnValidSubmit="HandleUserRegistrationAsync">
+            <div class="card-body">
+                <DataAnnotationsValidator />
+
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="col">
+                            <InputText class="form-input" @bind-Value="@request.FirstName" type="text"
+                                Placeholder="First Name" />
+                            <ValidationMessage class="validation-msg" For="(() => request.FirstName)" />
+                        </div>
+
+                        <div class="col">
+                            <InputText class="form-input" @bind-Value="@request.LastName" type="text"
+                                Placeholder="Last Name" />
+                            <ValidationMessage class="validation-msg" For="(() => request.LastName)" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <InputText class="form-input" @bind-Value="@request.Username" type="text" Placeholder="Username" />
+                    <ValidationMessage class="validation-msg" For="(() => request.Username)" />
+                </div>
+
+                <div class="form-group">
+                    <InputText class="form-input" @bind-Value="@request.Email" type="email"
+                        Placeholder="Email address" />
+                    <ValidationMessage class="validation-msg" For="(() => request.Email)" />
+                </div>
+
+                <div class="form-group">
+                    <InputText class="form-input" @bind-Value="@request.Location" type="text" Placeholder="Location" />
+                    <ValidationMessage class="validation-msg" For="(() => request.Location)" />
+                </div>
+
+                <div class="form-group">
+                    <InputText class="form-input" @bind-Value="@request.PhoneNumber" type="text"
+                        Placeholder="Phone Number" />
+                    <ValidationMessage class="validation-msg" For="(() => request.PhoneNumber)" />
+                </div>
+
+                <div class="form-group">
+                    <InputText class="form-input" @bind-Value="@request.Password" type="password"
+                        Placeholder="Password" />
+                    <ValidationMessage class="validation-msg" For="(() => request.Password)" />
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <button type="submit" class="form-button" disabled="@isMakingRequest">
+                    Register new user
+                </button>
+                <div style="margin-top: 1rem; text-align: center">
+                    <p>Already have an account? <a href="/user/login">Log in here</a></p>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+</div>

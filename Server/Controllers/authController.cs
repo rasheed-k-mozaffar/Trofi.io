@@ -108,15 +108,16 @@ namespace Trofi.io.Server.Controllers
             return Ok(new ApiResponse<string>
             {
                 Message = result.Message,
-
+                Body = result.JWT,
+                IsSuccess = true
             });
         }
 
         [HttpPost("revoke-token")]
-        public async Task<IActionResult> RevokeToken(RevokeTokenRequest revokeTokenRequest)
+        public async Task<IActionResult> RevokeToken(RevokeTokenRequest? revokeTokenRequest)
         {
             // getting the token from either place works
-            var refreshToken = revokeTokenRequest.Token ?? Request.Cookies["Refresh_Token"];
+            var refreshToken = revokeTokenRequest?.Token ?? Request.Cookies["Refresh_Token"];
 
             if (string.IsNullOrEmpty(refreshToken))
             {

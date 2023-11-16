@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.Extensions.Options;
+using Trofi.io.Server;
 using Trofi.io.Server.Extensions;
 using Trofi.io.Server.Options;
 
@@ -7,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 #region SERVICES
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+builder.Services.ConfigureOptions<JwtOptionsSetup>();
 
 builder.Services.AddCustomServicesToDiContainer();
 
@@ -33,6 +37,14 @@ builder.Services.AddScoped(sp =>
     }
     return userInfo;
 });
+
+builder.Services.AddScoped(sp =>
+{
+    var jwtOptions = sp.GetService<IOptions<JwtOptions>>()!.Value;
+
+    return jwtOptions;
+});
+
 #endregion
 
 var app = builder.Build();
@@ -51,6 +63,8 @@ app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseMiddleware<JwtExpirationCheckerMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();
