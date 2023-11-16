@@ -1,0 +1,44 @@
+main {
+    min-height: 100vh;
+    background-color: var(--bg-color);
+}
+
+nav {
+    padding: .25% 15%;
+    background-color: var(--light-color);
+    border-bottom: 4px solid var(--main-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 10vh;
+}
+
+.logo::first-letter {
+    font-size: 35px;
+    color: var(--main-color);
+    font-weight: 900;
+}
+
+.logo {
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.right {
+    display: flex;
+    gap: 2rem;
+}
+
+.left {
+    display: flex;
+    gap: 2rem;
+}
+
+svg {
+    cursor: pointer;
+    transition: .2s ease all;
+}
+
+svg:hover {
+    color: var(--main-color);
+}

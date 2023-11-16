@@ -1,0 +1,49 @@
+﻿@page "/user/login"
+
+<PageTitle>Login</PageTitle>
+
+@if (isMakingRequest)
+{
+    <BasicLoader />
+}
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1>Login to your account</h1>
+        </div>
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <ErrorAlert ErrorMessage="@errorMessage" />
+        }
+
+        <EditForm Model="request" OnValidSubmit="HandleUserLoginAsync">
+            <div class="card-body">
+                <DataAnnotationsValidator />
+
+                <div class="form-group">
+                    <InputText class="form-input" @bind-Value="@request.Email" type="email"
+                        Placeholder="Email address" />
+                    <ValidationMessage class="validation-msg" For="(() => request.Email)" />
+                </div>
+
+                <div class="form-group">
+                    <InputText class="form-input" @bind-Value="@request.Password" type="password"
+                        Placeholder="Password" />
+                    <ValidationMessage class="validation-msg" For="(() => request.Password)" />
+                </div>
+
+            </div>
+
+            <div class="card-footer">
+                <button type="submit" class="form-button" disabled="@isMakingRequest">
+                    Sign in
+                </button>
+                <div style="margin-top: 1rem; text-align: center">
+                    <p>No account? <a href="/user/register">Create one</a></p>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+</div>

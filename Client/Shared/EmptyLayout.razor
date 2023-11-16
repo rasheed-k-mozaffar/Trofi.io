@@ -1,0 +1,25 @@
+﻿@inherits LayoutComponentBase
+
+<main>
+    <header>
+        <h1>Trofi.io</h1>
+    </header>
+    @Body
+</main>
+
+<style>
+    main {
+        background-color: var(--bg-color);
+        opacity: 1;
+        background-image: radial-gradient(#47626E 1.6px, transparent 1.6px), radial-gradient(#47626E 1.6px, var(--bg-color) 1.6px);
+        background-size: 64px 64px;
+        background-position: 0 0, 32px 32px;
+    }
+
+    header {
+        position: absolute;
+        width: 100%;
+        text-align: center;
+        margin-top: 1rem;
+    }
+</style>

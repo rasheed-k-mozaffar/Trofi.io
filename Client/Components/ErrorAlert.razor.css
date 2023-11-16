@@ -1,0 +1,17 @@
+.wrapper {
+    width: full;
+    padding: .75rem 1rem;
+    background-color: rgb(255, 223, 223);
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: var(--small-radius);
+    border: 1px solid var(--error-color);
+}
+
+.content {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: .5rem;
+    color: var(--error-color);
+}
