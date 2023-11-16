@@ -39,6 +39,7 @@ public static class ServicesExtensions
         services.AddScoped<IMenuRepository, MenuRepository>();
         services.AddScoped<IAuthRepository, AuthRepository>();
         services.AddScoped<ICartRepository, CartRepository>();
+        services.AddScoped<JwtExpirationCheckerMiddleware>();
     }
 
     /// <summary>
