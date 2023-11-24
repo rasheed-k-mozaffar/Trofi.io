@@ -13,6 +13,7 @@ public class FilesRepository : IFilesRepository
     /// Writes a new image to the database for a particular menu item
     /// </summary>
     /// <param name="imageUrl">The image URL in the file system</param>
+    /// <param name="path">The root path of the image so that the image can be removed from the file system</param>
     /// <param name="dishId">The menu item which the image belongs to</param>
     /// <returns></returns>
     /// <exception cref="ResourceCreationFailedException">Thrown if the database failes to save the new image</exception>
