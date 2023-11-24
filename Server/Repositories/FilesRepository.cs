@@ -16,15 +16,16 @@ public class FilesRepository : IFilesRepository
     /// <param name="dishId">The menu item which the image belongs to</param>
     /// <returns></returns>
     /// <exception cref="ResourceCreationFailedException">Thrown if the database failes to save the new image</exception>
-    public async Task AddDishImageAsync(string imageUrl, Guid dishId)
+    public async Task<DishImage> AddDishImageAsync(string imageUrl, string path, Guid dishId)
     {
-        DishImage dishImage = new() { URL = imageUrl, MenuItemId = dishId };
+        DishImage dishImage = new() { Id = Guid.NewGuid(), URL = imageUrl, Path = path, MenuItemId = dishId };
 
         var result = await _context.Images.AddAsync(dishImage);
 
         if (result.State == EntityState.Added)
         {
             await _context.SaveChangesAsync();
+            return dishImage;
         }
         else
         {
@@ -44,7 +45,7 @@ public class FilesRepository : IFilesRepository
 
         if (imageToDelete is not null)
         {
-            File.Delete(imageToDelete.URL!); // we know for a fact, the URL cannot be null
+            File.Delete(imageToDelete.Path!); // we know for a fact, the Path cannot be null
 
             var result = _context.Images.Remove(imageToDelete);
 

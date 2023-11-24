@@ -7,18 +7,23 @@ namespace Trofi.io.Server.Controllers;
 [Route("/api/[controller]")]
 public class FilesController : ControllerBase
 {
+    //TODO: Remove the context after done with testing
+    private readonly AppDbContext _context;
+
     private readonly ILogger<FilesController> _logger;
-    private readonly IWebHostEnvironment _webHostEnv;
     private readonly IFilesRepository _filesRepository;
+    private readonly IWebHostEnvironment _environment;
     public FilesController
     (
         ILogger<FilesController> logger,
-        IWebHostEnvironment webHostEnv,
-        IFilesRepository filesRepository)
+        IFilesRepository filesRepository,
+        IWebHostEnvironment environment,
+        AppDbContext context)
     {
         _logger = logger;
-        _webHostEnv = webHostEnv;
         _filesRepository = filesRepository;
+        _environment = environment;
+        _context = context;
     }
 
     private static IEnumerable<string> allowedFileExtensions = new List<string>(3)
@@ -52,19 +57,24 @@ public class FilesController : ControllerBase
         try
         {
             var newFileName = $"{Guid.NewGuid()}{fileExtension}";
-            var imageFilePath = Path.Combine(_webHostEnv.WebRootPath, "images", newFileName);
+            var imageFilePath = Path.Combine(_environment.WebRootPath, "images", newFileName);
 
             using (var fileStream = new FileStream(imageFilePath, FileMode.Create))
             {
                 // Save the new file to the file system inside of wwwroot/images
                 file.CopyTo(fileStream);
-
-                var url = Url.Content($"{imageFilePath}"); // the ~/file is the relative path
-
-                await _filesRepository.AddDishImageAsync(imageUrl: url, dishId);
+                var url = $"/images/{newFileName}";
+                var addedImage = await _filesRepository.AddDishImageAsync(imageUrl: url, imageFilePath, dishId);
                 _logger.LogInformation($"A new file was successfully uploaded: File URL => {newFileName}");
 
-                return Ok(new { Url = url });
+                // return the added image as an image dto object so that the client can render it and 
+                // allow the user to remove the image.
+                return Ok(new ApiResponse<ImageDto>
+                {
+                    Message = "Image uploaded successfully",
+                    Body = addedImage.ToDishImageDto(),
+                    IsSuccess = true
+                });
             }
         }
         catch (Exception ex)
@@ -130,5 +140,21 @@ public class FilesController : ControllerBase
                 ErrorMessage = ex.Message
             });
         }
+    }
+
+    [HttpDelete("flush-images")]
+    public async Task<IActionResult> DeleteAllImages()
+    {
+        var images = await _context.Images.ToListAsync();
+
+        for (int i = 0; i < images.Count; i++)
+        {
+            System.IO.File.Delete(images[i].URL!);
+        }
+
+        _context.Images.RemoveRange(images);
+        _context.SaveChanges();
+
+        return Ok();
     }
 }
