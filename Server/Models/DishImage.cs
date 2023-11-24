@@ -11,4 +11,7 @@ public class DishImage
 
     [Required]
     public string? URL { get; set; }
+
+    [Required]
+    public string? Path { get; set; }
 }
