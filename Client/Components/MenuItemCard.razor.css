@@ -1,0 +1,81 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2rem;
+    padding: 3rem 3rem;
+    max-height: 600px;
+    max-width: 350px;
+    background-color: #F0EADD;
+    transition: .2s ease;
+}
+
+.card:hover {
+    box-shadow: 10px 10px 20px #dfd9d9;
+}
+
+.card-header {
+    max-height: 300px;
+    padding-right: 1rem;
+    padding-left: 1rem;
+}
+
+.card-header img {
+    max-width: 100%;
+    border-radius: var(--medium-radius);
+}
+
+.card-body {
+    text-align: center;
+}
+
+.card-body .name {
+    font-weight: 700;
+    margin-bottom: 1rem;
+    font-size: 28px;
+    color: #14375F;
+    font-family: 'Lobster', sans-serif;
+}
+
+.card-body p {
+    margin-bottom: 1rem;
+    font-weight: 400;
+}
+
+.card-body .price {
+    font-weight: 600;
+    color: var(--success-color);
+    font-size: 20px;
+    font-family: 'Lobster', sans-serif;
+}
+
+.card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+}
+
+.add-to-cart-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--main-color);
+    padding: .75rem 2rem;
+    border: none;
+    cursor: pointer;
+    color: white;
+    gap: .5rem;
+}
+
+.add-to-cart-btn p {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.add-to-favs-btn {
+    background-color: var(--secondary-color);
+    padding: .75rem 1rem;
+    border: none;
+    cursor: pointer;
+}

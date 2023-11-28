@@ -1,0 +1,78 @@
+.card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    gap: 2rem;
+    padding: 1rem;
+    border-radius: var(--extrasmall-radius);
+    transition: .1s ease all;
+    width: 100%;
+    height: 100px;
+    background-color: white;
+    border: 2px solid #DEDEDE;
+}
+
+.card:hover {
+    box-shadow: 10px 10px 25px lightgray;
+}
+
+.first {
+    width: 20%;
+}
+
+.second {
+    width: 20%;
+}
+
+.third {
+    width: 5%
+}
+
+img {
+    max-width: 100px;
+    max-height: 100px;
+    object-fit: cover;
+}
+
+
+.price {
+    color: var(--main-color)
+}
+
+.card-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.action-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    border-radius: 50%;
+    transition: .2s ease all;
+    cursor: pointer;
+}
+
+.gallery:hover {
+    background-color: #FFEFFD;
+    color: #E579D8;
+}
+
+.info:hover {
+    background-color: #EDF7FF;
+    color: #4697D5;
+}
+
+.edit:hover {
+    background-color: #F3FFED;
+    color: #44BA0E;
+}
+
+.delete:hover {
+    background-color: #FEEEEE;
+    color: #EB5757;
+}
