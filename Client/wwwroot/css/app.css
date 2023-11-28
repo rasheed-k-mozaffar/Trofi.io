@@ -22,7 +22,9 @@
     --text-semidark: #626262;
     --text-dark: #000;
     --blue-shade: #1381d5;
-    --error-color: #e22e2e;
+    --error-color: #EB5757;
+    --red-border: #F7ADAB;
+    --lightred-bg: #FEEEEE;
     --light-color: #FFF;
     --success-color: #53C244;
 }
