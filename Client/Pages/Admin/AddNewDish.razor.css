@@ -1,0 +1,257 @@
+main {
+    transition: .25s ease all;
+    background-color: var(--bg-color);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card {
+    min-width: 50%;
+    background-color: white;
+    padding: 2.5%;
+    border-radius: var(--medium-radius);
+    box-shadow: 10px 10px 25px lightgray;
+}
+
+.main-title {
+    font-size: 34px;
+    font-weight: 800;
+}
+
+.bottom-row {
+    display: flex;
+    justify-content: end;
+}
+
+.continue-btn {
+    appearance: button;
+    background-color: #1899D6;
+    border: solid transparent;
+    border-radius: 16px;
+    border-width: 0 0 4px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: .8px;
+    line-height: 20px;
+    margin: 0;
+    outline: none;
+    overflow: visible;
+    padding: 13px 19px;
+    text-align: center;
+    text-transform: uppercase;
+    touch-action: manipulation;
+    transform: translateZ(0);
+    transition: filter .2s;
+    vertical-align: middle;
+    white-space: nowrap;
+   }
+
+.continue-btn:after {
+    background-clip: padding-box;
+    background-color: #1CB0F6;
+    border: solid transparent;
+    border-radius: 16px;
+    border-width: 0 0 4px;
+    bottom: -4px;
+    content: "";
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: -1;
+}
+
+.continue-btn:hover:not(:disabled) {
+    filter: brightness(1.1);
+}
+
+.continue-btn:disabled {
+    cursor: none;
+    background-color: lightgray;
+}
+
+.continue-btn:active:after {
+    border-width: 0 0 0px;
+}
+
+.continue-btn:active {
+    padding-bottom: 10px;
+}
+
+.bar-container {
+    width: 100%;
+    margin-bottom: 2.5rem;
+}
+
+.outer-shell {
+    width: 100%;
+    background-color: rgb(218, 244, 218);
+    border-radius: 25px;
+    padding: 5px;
+    height: 20px;
+}
+
+.progress-marks {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.progress-mark {
+    height: 40px;
+    width: 40px;
+    color: white;
+    background-color: rgb(73, 113, 73);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: .3s ease all;
+}
+
+.active-mark {
+    height: 48px;
+    width: 48px;
+    box-shadow: 2.5px 2.5px 5px lightgray;
+}
+
+.gallery-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.images-container {
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.images-container img {
+    border-radius: var(--extrasmall-radius);
+    object-fit: cover;
+}
+
+.remove-img-btn {
+    padding: .75rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+    font-size: 16px;
+    width: 100%;
+    background-color: white;
+    border-radius: var(--extrasmall-radius);
+    border: 2px solid #F7ADAB;
+    color: var(--error-color);
+    cursor: pointer;
+}
+
+.remove-img-btn:hover {
+    background-color: #FEEEEE;
+}
+
+.image-upload-btn {
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 5px;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .image-upload-btn:hover {
+    background-color: #0069d9;
+  }
+
+
+.success-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.upload-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+@media only screen and (max-width: 1820px)
+{   
+    .card {
+        min-width: 40%;
+    }
+}
+
+
+@media only screen and (max-width: 1650px)
+{   
+    .card {
+        min-width: 50%;
+    }
+}
+
+
+@media only screen and (max-width: 1440px)
+{   
+    .card {
+        min-width: 60%;
+    }
+}
+
+@media only screen and (max-width: 900px)
+{   
+    .card {
+        min-width: 70%;
+    }
+
+    .images-container {
+        justify-content: center;
+    }
+}
+
+@media only screen and (max-width: 800px)
+{   
+    .card {
+        min-width: 80%;
+    }
+
+    .images-container {
+        justify-content: center;
+    }
+}
+
+@media only screen and (max-width: 768px)
+{   
+    .card {
+        min-width: 90%;
+    }
+
+    .images-container {
+        justify-content: center;
+    }
+}
+
+@media only screen and (max-width: 540px)
+{   
+    .card {
+        min-width: 98%;
+    }
+
+    .images-container {
+        justify-content: center;
+    }
+}
