@@ -64,7 +64,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseMiddleware<JwtExpirationCheckerMiddleware>();
+// app.UseMiddleware<JwtExpirationCheckerMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();
