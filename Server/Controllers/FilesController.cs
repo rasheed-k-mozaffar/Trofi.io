@@ -149,7 +149,7 @@ public class FilesController : ControllerBase
 
         for (int i = 0; i < images.Count; i++)
         {
-            System.IO.File.Delete(images[i].URL!);
+            System.IO.File.Delete(images[i].Path!);
         }
 
         _context.Images.RemoveRange(images);
