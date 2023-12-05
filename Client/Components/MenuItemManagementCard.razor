@@ -1,10 +1,11 @@
-﻿<div class="card">
+﻿@inject NavigationManager Nav
+<div class="card">
     <div class="first">
-        <img src="@Item.Images?.First().URL" />
+        <img src="@(Item.Images?.LastOrDefault()?.URL ?? "images/no-images.png")" />
     </div>
 
     <div class="second">
-        <h4>@Item.Name</h4>
+        <h4 @onclick='(() => Nav.NavigateTo($"/menu/{Item.Id}"))'>@Item.Name</h4>
     </div>
 
     <div class="third">
@@ -14,7 +15,7 @@
     <div class="card-buttons">
         <hr />
         @* Action Buttons *@
-        <div class=" action-btn gallery">
+        <div class=" action-btn gallery" @onclick="GalleryClicked">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-images"
                 viewBox="0 0 16 16">
                 <path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3" />
@@ -23,16 +24,7 @@
             </svg>
         </div>
 
-        <div class="action-btn info">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-info-circle"
-                viewBox="0 0 16 16">
-                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                <path
-                    d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0" />
-            </svg>
-        </div>
-
-        <div class="action-btn edit">
+        <div class="action-btn edit" @onclick="EditClicked">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil"
                 viewBox="0 0 16 16">
                 <path
@@ -40,7 +32,7 @@
             </svg>
         </div>
 
-        <div class="action-btn delete">
+        <div class="action-btn delete" @onclick="DeleteClicked">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash"
                 viewBox="0 0 16 16">
                 <path
@@ -54,4 +46,22 @@
 
 @code {
     [Parameter] public MenuItemDto Item { get; set; } = null!;
+    [Parameter] public EventCallback OnDeleteClicked { get; set; }
+    [Parameter] public EventCallback OnGalleryClicked { get; set; }
+    [Parameter] public EventCallback OnEditClicked { get; set; }
+
+    private void DeleteClicked()
+    {
+        OnDeleteClicked.InvokeAsync();
+    }
+
+    private void GalleryClicked()
+    {
+        OnGalleryClicked.InvokeAsync();
+    }
+
+    private void EditClicked()
+    {
+        OnEditClicked.InvokeAsync();
+    }
 }
