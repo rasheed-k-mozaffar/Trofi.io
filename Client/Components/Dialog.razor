@@ -1,0 +1,47 @@
+﻿<div class="overlay">
+    <div class="dialog">
+        <div class="dialog-header">
+            <div>
+                <h2 class="title">@(Title ?? "Take Action")</h2>
+            </div>
+
+            <div class="close-button" @onclick="CloseButtonClicked">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg"
+                    viewBox="0 0 16 16">
+                    <path
+                        d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                </svg>
+            </div>
+        </div>
+
+        <div>
+            @Middle
+        </div>
+
+        <div class="dialog-footer">
+            <button class="cancel-action-btn" @onclick="CloseButtonClicked">@(CancelButtonText ?? "Cancel")</button>
+            <button class="confirm-removal-btn" @onclick="ConfirmButtonClicked">@(ConfirmButtonText ??
+                "Confirm")</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public EventCallback OnCloseClicked { get; set; }
+    [Parameter] public RenderFragment? Middle { get; set; }
+    [Parameter] public RenderFragment? Bottom { get; set; }
+    [Parameter] public string? CancelButtonText { get; set; }
+    [Parameter] public string? ConfirmButtonText { get; set; }
+    [Parameter] public EventCallback OnConfirmClicked { get; set; }
+
+    private void CloseButtonClicked()
+    {
+        OnCloseClicked.InvokeAsync();
+    }
+
+    private void ConfirmButtonClicked()
+    {
+        OnConfirmClicked.InvokeAsync();
+    }
+}
