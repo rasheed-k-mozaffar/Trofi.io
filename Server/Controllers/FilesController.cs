@@ -157,4 +157,18 @@ public class FilesController : ControllerBase
 
         return Ok();
     }
+
+    [HttpGet("dish-images/{dishId}")]
+    public async Task<IActionResult> GetDishImages(Guid dishId)
+    {
+        var images = await _filesRepository.GetDishImagesAsync(dishId);
+        var imagesAsDtos = images.Select(i => i.ToDishImageDto());
+
+        return Ok(new ApiResponse<IEnumerable<ImageDto>>
+        {
+            Message = "Images retrieved successfully",
+            Body = imagesAsDtos,
+            IsSuccess = true
+        });
+    }
 }
