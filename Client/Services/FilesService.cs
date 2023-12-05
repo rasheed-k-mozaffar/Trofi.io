@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 
 namespace Trofi.io.Client.Services;
@@ -58,6 +59,19 @@ public class FilesService : IFilesService
         }
 
         var result = await response.Content.ReadFromJsonAsync<ApiResponse<ImageDto>>();
+        return result!;
+    }
+
+    public async Task<ApiResponse<IEnumerable<ImageDto>>> GetDishImagesAsync(Guid dishId)
+    {
+        var response = await _httpClient.GetAsync($"{BaseUrl}/dish-images/{dishId}");
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new DataRetrievalException(message: "Something went wrong while attempting to load the images");
+        }
+
+        var result = await response.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<ImageDto>>>();
         return result!;
     }
 }

@@ -7,4 +7,5 @@ public interface IFilesService
     Task<ApiResponse<ImageDto>> UploadFileAsync(IFormFile file, Guid dishId);
     Task<ApiResponse<ImageDto>> GetImageAsync(Guid imageId);
     Task<ApiResponse> RemoveImageAsync(Guid imageId);
+    Task<ApiResponse<IEnumerable<ImageDto>>> GetDishImagesAsync(Guid dishId);
 }
