@@ -1,0 +1,79 @@
+﻿@page "/admin/edit-dish/{dishId:guid}"
+
+<PageTitle>Admin - Edit Dish</PageTitle>
+
+@if (wantsToDiscard)
+{
+    <Dialog Title="Discard Changes?" CancelButtonText="Keep editing" ConfirmButtonText="Discard"
+    OnCloseClicked="(() => wantsToDiscard = false)" OnConfirmClicked="DiscardChangesAsync">
+    <Middle>
+        <p style="font-weight: 300; font-size: 14px">Your changes will not be saved!</p>
+    </Middle>
+</Dialog>
+}
+
+@if (isLoadingDishData)
+{
+    <BasicLoader />
+}
+else
+{
+    <div class="container">
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <h1>Edit Details</h1>
+            </div>
+
+            <div class="close-button" @onclick="(() => wantsToDiscard = true)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg"
+                    viewBox="0 0 16 16">
+                    <path
+                        d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                </svg>
+            </div>
+        </div>
+
+        <div class="card-content">
+            <EditForm Model="editedItem" OnValidSubmit="HandleItemUpdateAsync">
+                <DataAnnotationsValidator />
+
+                <div class="form-group">
+                    <label>Dish Name</label>
+                    <InputText class="form-input" @bind-Value="@editedItem.Name" type="text" />
+                    <ValidationMessage class="validation-msg" For="(() => editedItem.Name)" />
+                </div>
+
+                <div class="form-group">
+                    <label>Dish Description</label>
+                    <InputTextArea class="form-input" style="height: 150px;" @bind-Value="@editedItem.Description"
+                        type="text" />
+                    <ValidationMessage class="validation-msg" For="(() => editedItem.Description)" />
+                </div>
+
+                <div class="form-group">
+                    <label>Dish Price</label>
+                    <InputNumber class="form-input" @bind-Value="@editedItem.Price" type="number" />
+                    <ValidationMessage class="validation-msg" For="(() => editedItem.Price)" />
+                </div>
+
+                <div class="form-group">
+                    <InputCheckbox class="form-checkbox" @bind-Value="@editedItem.IsAvailable" />
+                    <lable>Is this dish currently available for ordering?</lable>
+                </div>
+
+                <div class="form-group">
+                    <InputCheckbox class="form-checkbox" @bind-Value="@editedItem.IsSpecial" />
+                    <lable>Is this dish currently on the specials list?</lable>
+                </div>
+
+                <div class="card-footer">
+                    <div class="form-group bottom-row">
+                        <button type="submit" class="continue-btn" disabled="@isMakingRequest">Confirm Updates</button>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+}

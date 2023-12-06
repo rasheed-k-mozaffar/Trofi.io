@@ -1,0 +1,17 @@
+.wrapper {
+    width: 100%;
+    padding: 1rem 1rem;
+    background-color: #E0F6FF;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: var(--small-radius);
+    border: 1px solid #1098CE;
+}
+
+.content {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: .5rem;
+    color: #1098CE;
+}

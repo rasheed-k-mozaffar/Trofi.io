@@ -149,12 +149,26 @@ public class FilesController : ControllerBase
 
         for (int i = 0; i < images.Count; i++)
         {
-            System.IO.File.Delete(images[i].URL!);
+            System.IO.File.Delete(images[i].Path!);
         }
 
         _context.Images.RemoveRange(images);
         _context.SaveChanges();
 
         return Ok();
+    }
+
+    [HttpGet("dish-images/{dishId}")]
+    public async Task<IActionResult> GetDishImages(Guid dishId)
+    {
+        var images = await _filesRepository.GetDishImagesAsync(dishId);
+        var imagesAsDtos = images.Select(i => i.ToDishImageDto());
+
+        return Ok(new ApiResponse<IEnumerable<ImageDto>>
+        {
+            Message = "Images retrieved successfully",
+            Body = imagesAsDtos,
+            IsSuccess = true
+        });
     }
 }

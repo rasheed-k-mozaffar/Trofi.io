@@ -25,6 +25,7 @@ public static class DataMappers
         return new MenuItemDto
         {
             Id = menuItem.Id,
+            Description = menuItem.Description,
             Name = menuItem.Name,
             Price = menuItem.Price,
             UpdatedPrice = menuItem.UpdatedPrice,

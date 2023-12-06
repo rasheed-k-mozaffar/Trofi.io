@@ -4,9 +4,8 @@ main {
 }
 
 nav {
-    padding: .25% 15%;
-    background-color: var(--light-color);
-    border-bottom: 4px solid var(--main-color);
+    padding: 2% 15%;
+    background-color: transparent;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -26,19 +25,10 @@ nav {
 
 .right {
     display: flex;
-    gap: 2rem;
-}
-
-.left {
-    display: flex;
+    align-items: center;
     gap: 2rem;
 }
 
 svg {
     cursor: pointer;
-    transition: .2s ease all;
-}
-
-svg:hover {
-    color: var(--main-color);
 }

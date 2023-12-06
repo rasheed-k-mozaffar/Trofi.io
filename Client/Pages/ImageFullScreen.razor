@@ -1,0 +1,61 @@
+﻿@page "/image/{imageId:guid}"
+@inject IFilesService FilesService
+@layout FullyEmptyLayout
+
+<PageTitle>Image View</PageTitle>
+
+@if (isLoadingImage)
+{
+    <BasicLoader />
+}
+else
+{
+    <div class="image-wrapper">
+    <img src="@image.URL" alt="Dish Image" />
+</div>
+}
+
+<style>
+    .image-wrapper {
+        height: 100vh;
+        width: 100vw;
+        padding: 5rem;
+    }
+
+    .image-wrapper img {
+        width: 100%;
+        height: 100%;
+        border-radius: 25px;
+        object-fit: contain;
+    }
+</style>
+
+@code {
+    [Parameter] public Guid ImageId { get; set; }
+    ApiResponse<ImageDto> response = new();
+    ImageDto image = new();
+    bool isLoadingImage = true;
+    string errorMessage = string.Empty;
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            response = await FilesService.GetImageAsync(ImageId);
+
+            if (response.IsSuccess)
+            {
+                image = response.Body!;
+            }
+        }
+        catch (DataRetrievalException ex)
+        {
+            errorMessage = ex.Message;
+        }
+        finally
+        {
+            isLoadingImage = false;
+        }
+    }
+}

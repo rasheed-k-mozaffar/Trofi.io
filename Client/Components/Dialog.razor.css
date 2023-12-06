@@ -1,0 +1,84 @@
+.overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(0,0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.dialog {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 500px;
+    min-width: 400px;
+    background-color: white;
+    border-radius: 5px;
+    padding: 1rem 2rem;
+}
+
+.dialog .dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title {
+    font-weight: 500;
+    color: #444444;
+}
+
+.close-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: .5rem;
+    border-radius: 5px;
+    transition: .2s ease;
+    background-color: white;
+    cursor: pointer;
+}
+
+.close-button:hover {
+    background-color: #f1f1f1;
+}
+
+.dialog-footer {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: .5rem;
+}
+
+.cancel-action-btn {
+    padding: .75rem 2rem;
+    background-color: #ebebeb;
+    color: #626262;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: .2s ease all;
+}
+
+.cancel-action-btn:hover {
+    background-color: #dadada;
+}
+
+.confirm-removal-btn {
+    padding: .75rem 2rem;
+    background-color: #FEEEEE;
+    color: #EB5757;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: .2s ease all;
+}
+
+.confirm-removal-btn:hover {
+    background-color: #ffdddd;
+}

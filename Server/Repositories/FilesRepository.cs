@@ -80,4 +80,13 @@ public class FilesRepository : IFilesRepository
             throw new NotFoundException(message: "The image you're looking for doesn't exist");
         }
     }
+
+    public async Task<IEnumerable<DishImage>> GetDishImagesAsync(Guid dishId)
+    {
+        var images = await _context.Images
+                                    .Where(i => i.MenuItemId == dishId)
+                                    .ToListAsync();
+
+        return images ?? Enumerable.Empty<DishImage>();
+    }
 }
