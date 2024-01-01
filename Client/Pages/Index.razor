@@ -1,21 +1,18 @@
 ﻿@page "/"
 
 <main>
-    <div class="hero">
-        <h1 class="hero-text">It's really just food!<br />Or is it, really?</h1>
-        <button class="hero-btn">Browse Our Menu</button>
-    </div>
 
     <div class="page-body">
-
-    </div>
-
-    <div class="page-footer">
-        @* TODO: Change the data model, the issue is possibly with the URL, add a path property
-        to the image class, save the absolute path, and send back the correct url such that the image
-        can be displayed, and also, deleted from the system through its path *@
-        <img height="500" width="500" src="/images/a3fdc70c-f9e8-4e7e-9bf8-000e4dc8ab38.jpeg" />
+        @if (isLoadingMenuData)
+        {
+            <Loader />
+        }
+        else
+        {
+            foreach (var i in menu)
+            {
+                <MenuItemCard Item="i" OnAddToCartClicked='(() => AddItemToCartAsync(i.Id))' />
+            }
+        }
     </div>
 </main>
-
-<MenuItemCard />

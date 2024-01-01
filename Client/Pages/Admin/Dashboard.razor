@@ -1,0 +1,97 @@
+﻿@page "/admin/dashboard"
+
+<PageTitle>Admin - Control Panel</PageTitle>
+
+@if (isMakingRequest)
+{
+    <BasicLoader />
+}
+
+@if (wantsToViewDishGallery)
+{
+    <DishGalleryManager DishId="selectedDishId" OnCloseClicked="CloseDishGallery" />
+}
+
+@if (wantsToDeleteDish)
+{
+    <Dialog Title="Confirm" OnCloseClicked="CloseDeleteDishConfirmationDialog" OnConfirmClicked="HandleDishDeletionAsync">
+
+    <Middle>
+        <p style="font-weight: 300; font-size: 14px">Are you sure you really want to delete this
+            dish? Please note that if you confirm this action, it can't be
+            inverted</p>
+    </Middle>
+</Dialog>
+}
+
+<div class="container">
+    <section>
+        <article class="stats-section">
+            @*TODO: This part, display stats here*@
+            <h1 class="title">Welcome Admin</h1>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente, illo hic. Aliquid possimus, quaerat
+                alias magni neque qui similique, iste dolorem in amet voluptatem natus quae a eum explicabo aspernatur.
+                Minus, cupiditate voluptatum nam accusamus nisi inventore at consequatur, in iure aperiam porro
+                laudantium nulla, facere voluptatem eaque omnis. Commodi quae expedita, aspernatur, voluptatum eveniet
+                maxime repudiandae dignissimos dolorum iste blanditiis suscipit atque impedit qui laborum explicabo ad
+                quo ipsam! Vel nesciunt repellat velit voluptatem aliquam quam inventore atque mollitia nobis nam
+                veritatis sit animi ipsam ipsum dolorum veniam unde, hic cupiditate dolores accusamus earum recusandae
+                perspiciatis. Excepturi, fuga nam.</p>
+            <button>Stuff Here</button>
+        </article>
+
+        <article class="menu-controls-section">
+            @* This part, display the menu items*@
+            <h1>Menu Management Options</h1>
+
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div>
+                    <ErrorAlert ErrorMessage="@errorMessage" />
+                </div>
+            }
+
+            <div class="functions-row">
+                <div>
+                    <input class="form-input" placeholder="Search" />
+                </div>
+
+                <div>
+                    <button @onclick='(()=> Nav.NavigateTo("/admin/add-new-dish"))' class="add-dish-btn">
+                        Add New Dish
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                            class="bi bi-plus-lg" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="menu-items-section">
+                @if (isLoadingData)
+                {
+                    <div>
+                        <Loader />
+                    </div>
+                }
+                else
+                {
+                    if (menuItems is null)
+                    {
+                        // TODO: Display a graphic
+                    }
+                    else
+                    {
+                        foreach (var i in menuItems)
+                        {
+                            <MenuItemManagementCard Item="i" OnDeleteClicked='(() => OpenDeleteDishConfirmationDialog(i.Id))'
+                                OnGalleryClicked='(() => OpenDishGallery(i.Id))'
+                                OnEditClicked='(() => GoToEditDishAsync(i.Id, i))' />
+                        }
+                    }
+                }
+            </div>
+        </article>
+    </section>
+</div>

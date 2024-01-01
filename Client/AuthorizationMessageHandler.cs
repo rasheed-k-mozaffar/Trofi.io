@@ -1,4 +1,5 @@
 ﻿using Blazored.LocalStorage;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
@@ -33,11 +34,16 @@ public class AuthorizationMessageHandler : DelegatingHandler
 
                 await SetAccessTokenAsync(refreshResult.Body!);
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
                 response = await base.SendAsync(request, cancellationToken);
             }
-        }
 
-        return await base.SendAsync(request, cancellationToken);
+            return response;
+        }
+        else
+        {
+            return await base.SendAsync(request, cancellationToken);
+        }
     }
 
     private async Task SetAccessTokenAsync(string token)

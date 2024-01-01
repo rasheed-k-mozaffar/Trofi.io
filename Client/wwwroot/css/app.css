@@ -15,7 +15,7 @@
     /* COLOR PALETTE VARIABLES */
     --main-color: #EA4444;
     --secondary-color: #FFB452;
-    --bg-color: #f0f0f0;
+    --bg-color: #FFFEFB;
     --tertiary-color: #47626E;
     --bg-dark: #2A2A2A;
     --text-light: #FFF;
@@ -62,6 +62,30 @@ label {
 
 .form-input:focus {
     outline: 4px solid #dfd9d9;
+}
+
+.form-button {
+    padding: 1rem;
+    width: 100%;
+    border-radius: var(--small-radius);
+    background-color: var(--main-color);
+    color: var(--text-light);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: .25s ease;
+}
+
+.form-button:hover {
+    box-shadow: 0 0.4rem #dfd9d9;
+}
+
+.form-button:disabled {
+    background-color: lightgray;
+    color: var(--text-semidark);
+    cursor: none;
+    pointer-events: none;
 }
 
 .validation-msg {

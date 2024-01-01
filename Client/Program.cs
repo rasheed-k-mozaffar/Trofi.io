@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Trofi.io.Client;
 using Trofi.io.Client.Extensions;
+using Trofi.io.Client.States;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -16,7 +17,9 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
 builder.Services.AddScoped<AuthenticationStateProvider, JwtAuthenticationStateProvider>();
 builder.Services.AddScoped<IFilesService, FilesService>();
+builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddTransient<AuthorizationMessageHandler>();
+builder.Services.AddSingleton<CartState>();
 
 builder.Services.AddHttpClient("Trofi.io.ServerAPI", client =>
 {
