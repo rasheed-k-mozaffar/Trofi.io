@@ -45,7 +45,7 @@ public class CartRepository : ICartRepository
 
         if (userCart.Items!.Any(i => i.ProductName == itemToAdd.Name))
         {
-            var item = await _context.CartItems.SingleAsync(i => i.ProductName == itemToAdd.Name);
+            var item = await _context.CartItems.FirstAsync(i => i.ProductName == itemToAdd.Name);
             item.Quantity++;
             await _context.SaveChangesAsync();
 
@@ -62,7 +62,7 @@ public class CartRepository : ICartRepository
             Quantity = quantity,
             Price = itemToAdd.Price,
             UpdatedPrice = itemToAdd.UpdatedPrice,
-            CoverImageURL = itemToAdd.DishImages?.FirstOrDefault()?.URL ?? "/Users/ahmadmozaffar/Desktop/2023_Projects/TrofiRepo/Trofi.io/Server/wwwroot/images/350f8428-e177-49eb-ab80-aadff09a3fcc.jpeg" // TODO: Grab a placeholder for items with no images
+            CoverImageURL = itemToAdd.DishImages?.LastOrDefault()?.URL ?? "images/no-images.png"
         };
 
         var result = await _context.CartItems.AddAsync(cartItem);

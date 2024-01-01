@@ -1,0 +1,79 @@
+@inject CartState CartState
+<div class="card">
+    <div class="first">
+        <img src="@Item.CoverImageURL" alt="@Item.ProductName" />
+    </div>
+
+    <div class="second">
+        <h3>@Item.ProductName</h3>
+    </div>
+
+    <div class="third">
+        @if (Item.UpdatedPrice is not null)
+        {
+            <h5>@Item.UpdatedPrice</h5>
+        }
+        else
+        {
+            <h5>@Item.Price</h5>
+        }
+    </div>
+
+    <div class="fourth">
+        <div class="quantity-controls">
+            <button @onclick="DecreaseQuantityClicked">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-dash-lg"
+                    viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8" />
+                </svg>
+            </button>
+            <input @bind-value="@Item.Quantity" disabled="@true" class="quantity-input" />
+            <button @onclick="IncreaseQuantityClicked">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-plus-lg"
+                    viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="fifth">
+        <h5>$@(Item.Price * Item.Quantity)</h5>
+        <button @onclick="RemoveItemClicked">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x"
+                viewBox="0 0 16 16">
+                <path
+                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+            </svg>
+        </button>
+    </div>
+</div>
+
+@code {
+    [Parameter] public CartItemDto Item { get; set; } = null!;
+    [Parameter] public EventCallback OnIncreaseQuantityClicked { get; set; }
+    [Parameter] public EventCallback OnDecreaseQuantityClicked { get; set; }
+    [Parameter] public EventCallback OnRemoveItemClicked { get; set; }
+
+    private void IncreaseQuantityClicked()
+    {
+        OnIncreaseQuantityClicked.InvokeAsync();
+        CartState.CartItemsCount++;
+        CartState.NotifyStateChanged();
+    }
+
+    private void DecreaseQuantityClicked()
+    {
+        OnDecreaseQuantityClicked.InvokeAsync();
+        CartState.CartItemsCount--;
+        CartState.NotifyStateChanged();
+    }
+
+    private void RemoveItemClicked()
+    {
+        OnRemoveItemClicked.InvokeAsync();
+        CartState.CartItemsCount -= Item.Quantity;
+        CartState.NotifyStateChanged();
+    }
+}
