@@ -33,6 +33,8 @@ builder.Services.AddScoped(sp =>
             var user = httpContext.User;
             userInfo.UserId = user.FindFirst(ClaimTypes.NameIdentifier)!.Value;
             userInfo.CartId = Guid.Parse(user.FindFirst("CartId")!.Value);
+            userInfo.FirstName = user.FindFirst(ClaimTypes.GivenName)!.Value;
+            userInfo.LastName = user.FindFirst(ClaimTypes.Surname)!.Value;
         }
     }
     return userInfo;
