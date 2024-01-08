@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Trofi.io.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class DatabaseUpdate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -52,6 +52,20 @@ namespace Trofi.io.Server.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Categories",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    LogoUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categories", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -179,11 +193,34 @@ namespace Trofi.io.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "RefreshToken",
+                columns: table => new
+                {
+                    AppUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Token = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ExpiresOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    RevokedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshToken", x => new { x.AppUserId, x.Id });
+                    table.ForeignKey(
+                        name: "FK_RefreshToken_AspNetUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MenuItems",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CartId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", maxLength: 7500, nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false),
@@ -195,10 +232,63 @@ namespace Trofi.io.Server.Migrations
                 {
                     table.PrimaryKey("PK_MenuItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MenuItems_Carts_CartId",
+                        name: "FK_MenuItems_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CartItems",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CartId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CoverImageURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Quantity = table.Column<byte>(type: "tinyint", nullable: false),
+                    Price = table.Column<double>(type: "float", nullable: false),
+                    UpdatedPrice = table.Column<double>(type: "float", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CartItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CartItems_Carts_CartId",
                         column: x => x.CartId,
                         principalTable: "Carts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CustomerReviews",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MenuItemID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AppUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Review = table.Column<string>(type: "nvarchar(2500)", maxLength: 2500, nullable: false),
+                    Rating = table.Column<float>(type: "real", nullable: false),
+                    UpVotes = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomerReviews", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CustomerReviews_AspNetUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_CustomerReviews_MenuItems_MenuItemID",
+                        column: x => x.MenuItemID,
+                        principalTable: "MenuItems",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -207,7 +297,8 @@ namespace Trofi.io.Server.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     MenuItemId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    URL = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    URL = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Path = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -260,10 +351,25 @@ namespace Trofi.io.Server.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CartItems_CartId",
+                table: "CartItems",
+                column: "CartId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Carts_AppUserId",
                 table: "Carts",
                 column: "AppUserId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomerReviews_AppUserId",
+                table: "CustomerReviews",
+                column: "AppUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomerReviews_MenuItemID",
+                table: "CustomerReviews",
+                column: "MenuItemID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Images_MenuItemId",
@@ -271,9 +377,9 @@ namespace Trofi.io.Server.Migrations
                 column: "MenuItemId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MenuItems_CartId",
+                name: "IX_MenuItems_CategoryId",
                 table: "MenuItems",
-                column: "CartId");
+                column: "CategoryId");
         }
 
         /// <inheritdoc />
@@ -295,19 +401,31 @@ namespace Trofi.io.Server.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "CartItems");
+
+            migrationBuilder.DropTable(
+                name: "CustomerReviews");
+
+            migrationBuilder.DropTable(
                 name: "Images");
+
+            migrationBuilder.DropTable(
+                name: "RefreshToken");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "MenuItems");
-
-            migrationBuilder.DropTable(
                 name: "Carts");
 
             migrationBuilder.DropTable(
+                name: "MenuItems");
+
+            migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Categories");
         }
     }
 }
