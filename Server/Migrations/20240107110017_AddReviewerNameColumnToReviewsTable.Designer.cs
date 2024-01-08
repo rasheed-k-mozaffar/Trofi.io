@@ -12,8 +12,8 @@ using Trofi.io.Server.Data;
 namespace Trofi.io.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231102142725_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240107110017_AddReviewerNameColumnToReviewsTable")]
+    partial class AddReviewerNameColumnToReviewsTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -257,6 +257,108 @@ namespace Trofi.io.Server.Migrations
                     b.ToTable("Carts");
                 });
 
+            modelBuilder.Entity("Trofi.io.Server.Models.CartItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CartId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CoverImageURL")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ProductName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte>("Quantity")
+                        .HasColumnType("tinyint");
+
+                    b.Property<double?>("UpdatedPrice")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CartId");
+
+                    b.ToTable("CartItems");
+                });
+
+            modelBuilder.Entity("Trofi.io.Server.Models.Category", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("LogoUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("Trofi.io.Server.Models.CustomerReview", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("EditedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("MenuItemID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<float>("Rating")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Review")
+                        .IsRequired()
+                        .HasMaxLength(2500)
+                        .HasColumnType("nvarchar(2500)");
+
+                    b.Property<string>("ReviwerName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("UpVotes")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("WrittenOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("MenuItemID");
+
+                    b.ToTable("CustomerReviews");
+                });
+
             modelBuilder.Entity("Trofi.io.Server.Models.DishImage", b =>
                 {
                     b.Property<Guid>("Id")
@@ -265,6 +367,10 @@ namespace Trofi.io.Server.Migrations
 
                     b.Property<Guid>("MenuItemId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("URL")
                         .IsRequired()
@@ -283,7 +389,7 @@ namespace Trofi.io.Server.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("CartId")
+                    b.Property<Guid?>("CategoryId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
@@ -310,7 +416,7 @@ namespace Trofi.io.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CartId");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("MenuItems");
                 });
@@ -366,6 +472,42 @@ namespace Trofi.io.Server.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Trofi.io.Server.Models.AppUser", b =>
+                {
+                    b.OwnsMany("Trofi.io.Server.Models.RefreshToken", "RefreshTokens", b1 =>
+                        {
+                            b1.Property<string>("AppUserId")
+                                .HasColumnType("nvarchar(450)");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
+
+                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+
+                            b1.Property<DateTime>("CreatedOn")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<DateTime>("ExpiresOn")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<DateTime?>("RevokedOn")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<string>("Token")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("AppUserId", "Id");
+
+                            b1.ToTable("RefreshToken");
+
+                            b1.WithOwner()
+                                .HasForeignKey("AppUserId");
+                        });
+
+                    b.Navigation("RefreshTokens");
+                });
+
             modelBuilder.Entity("Trofi.io.Server.Models.Cart", b =>
                 {
                     b.HasOne("Trofi.io.Server.Models.AppUser", "CartOwner")
@@ -375,6 +517,30 @@ namespace Trofi.io.Server.Migrations
                         .IsRequired();
 
                     b.Navigation("CartOwner");
+                });
+
+            modelBuilder.Entity("Trofi.io.Server.Models.CartItem", b =>
+                {
+                    b.HasOne("Trofi.io.Server.Models.Cart", null)
+                        .WithMany("Items")
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Trofi.io.Server.Models.CustomerReview", b =>
+                {
+                    b.HasOne("Trofi.io.Server.Models.AppUser", null)
+                        .WithMany("Reviews")
+                        .HasForeignKey("AppUserId");
+
+                    b.HasOne("Trofi.io.Server.Models.MenuItem", "ReviewedItem")
+                        .WithMany("CustomerReviews")
+                        .HasForeignKey("MenuItemID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ReviewedItem");
                 });
 
             modelBuilder.Entity("Trofi.io.Server.Models.DishImage", b =>
@@ -388,14 +554,18 @@ namespace Trofi.io.Server.Migrations
 
             modelBuilder.Entity("Trofi.io.Server.Models.MenuItem", b =>
                 {
-                    b.HasOne("Trofi.io.Server.Models.Cart", null)
+                    b.HasOne("Trofi.io.Server.Models.Category", "Category")
                         .WithMany("Items")
-                        .HasForeignKey("CartId");
+                        .HasForeignKey("CategoryId");
+
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("Trofi.io.Server.Models.AppUser", b =>
                 {
                     b.Navigation("Cart");
+
+                    b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("Trofi.io.Server.Models.Cart", b =>
@@ -403,8 +573,15 @@ namespace Trofi.io.Server.Migrations
                     b.Navigation("Items");
                 });
 
+            modelBuilder.Entity("Trofi.io.Server.Models.Category", b =>
+                {
+                    b.Navigation("Items");
+                });
+
             modelBuilder.Entity("Trofi.io.Server.Models.MenuItem", b =>
                 {
+                    b.Navigation("CustomerReviews");
+
                     b.Navigation("DishImages");
                 });
 #pragma warning restore 612, 618

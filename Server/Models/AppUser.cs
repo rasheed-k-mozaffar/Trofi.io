@@ -9,4 +9,5 @@ public class AppUser : IdentityUser
     public Guid CartId { get; set; }
     public virtual Cart? Cart { get; set; }
     public virtual List<RefreshToken>? RefreshTokens { get; set; }
+    public virtual ICollection<CustomerReview>? Reviews { get; set; } = new List<CustomerReview>();
 }

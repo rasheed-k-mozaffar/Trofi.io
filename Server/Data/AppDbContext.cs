@@ -9,6 +9,8 @@ public class AppDbContext : IdentityDbContext<AppUser>
     public DbSet<MenuItem> MenuItems { get; set; }
     public DbSet<DishImage> Images { get; set; }
     public DbSet<CartItem> CartItems { get; set; }
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<CustomerReview> CustomerReviews { get; set; }
     #endregion
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
@@ -51,5 +53,22 @@ public class AppDbContext : IdentityDbContext<AppUser>
             .HasMany(p => p.DishImages)
             .WithOne()
             .HasForeignKey(p => p.MenuItemId);
+
+        // many - to - one: A user can have many reviews
+        builder.Entity<AppUser>()
+            .HasMany(p => p.Reviews)
+            .WithOne()
+            .HasForeignKey(p => p.AppUserId);
+
+        // one - to - many: A review can belong to one item, and one item can have multiple reviews
+        builder.Entity<CustomerReview>()
+            .HasOne(p => p.ReviewedItem)
+            .WithMany(p => p.CustomerReviews);
+
+        // one - to - many: A category can have many products, while a product can belong to only one category
+        builder.Entity<Category>()
+            .HasMany(p => p.Items)
+            .WithOne(p => p.Category)
+            .HasForeignKey(p => p.CategoryId);
     }
 }

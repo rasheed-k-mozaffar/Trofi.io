@@ -10,4 +10,6 @@ public class MenuItemDto
     public IEnumerable<ImageDto>? Images { get; set; }
     public bool IsSpecial { get; set; }
     public bool IsAvailable { get; set; }
+    public CategorySummaryDto? Category { get; set; }
+    public float? Rating { get; set; }
 }

@@ -58,8 +58,25 @@ public class MenuController : ControllerBase
     [HttpGet("item/{id}")]
     public async Task<IActionResult> GetItem(Guid id)
     {
-        var item = await _menuRepository.GetDishByIdAsync(id);
-        return Ok(item);
+        try
+        {
+            var item = await _menuRepository.GetDishByIdAsync(id);
+            var itemAsDto = item.ToMenuItemDto();
+
+            return Ok(new ApiResponse<MenuItemDto>
+            {
+                Message = "Item retrieved successfully",
+                Body = itemAsDto,
+                IsSuccess = true
+            });
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(new ApiErrorResponse
+            {
+                ErrorMessage = ex.Message
+            });
+        }
     }
 
 
