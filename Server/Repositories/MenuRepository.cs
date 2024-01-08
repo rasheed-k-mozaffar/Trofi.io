@@ -6,7 +6,11 @@ public class MenuRepository : IMenuRepository
     private readonly AppDbContext _context;
     private readonly IFilesRepository _filesRepository;
 
-    public MenuRepository(AppDbContext context, IFilesRepository filesRepository)
+    public MenuRepository
+    (
+        AppDbContext context,
+        IFilesRepository filesRepository
+    )
     {
         _context = context;
         _filesRepository = filesRepository;
@@ -85,6 +89,17 @@ public class MenuRepository : IMenuRepository
                 {
                     await _filesRepository.DeleteDishImageAsync(item.DishImages.ElementAt(i).Id);
                 }
+            }
+
+            // delete all the customer reviews for the dish
+            if (item.CustomerReviews is not null && item.CustomerReviews.Any())
+            {
+                var associatedReviews = await _context
+                                                .CustomerReviews
+                                                .Where(r => r.MenuItemID == id)
+                                                .ToListAsync();
+
+                _context.CustomerReviews.RemoveRange(associatedReviews);
             }
 
             // finally delete the item itself
